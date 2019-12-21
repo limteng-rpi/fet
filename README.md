@@ -11,9 +11,13 @@ We convert datasets in our experiments in two steps:
     ]
 }
 ```
-2. Because fine-grained entity typing training sets are usually large, we shuffle the training examples and split them into chunks so that we don't need to load the whole training set into the memory. The conversion can be done using `data.BufferDataset.preprocess()`. Parameters:
-- input_file: A JSON file formatted as step 1 shows (e.g., `train.json`).
-- output_file: Path to the output files. Note that because the input file will be split into many files, this path is actually the prefix of all output files. For example, if `output_file=/output/path/train`, the script will generate `train.meta`, `train.txt.000` (JSON format), `train.txt.001`, ..., `train.txt.129`, and `train.bin.000` (binary, converted from `train.txt.000`), `train.bin.001`, ..., `train.bin.129` in the directory `/output/path/`.
+2. Because fine-grained entity typing training sets are usually large, we shuffle the training examples and split them into chunks so that we don't need to load the whole training set into the memory. The conversion can be done using `data.BufferDataset.preprocess()`.
+
+Parameters:
+- `input_file`: A JSON file formatted as step 1 shows (e.g., `train.json`).
+- `output_file`: Path to the output files. Note that because the input file will be split into many files, this path is actually the prefix of all output files. For example, if `output_file=/output/path/train`, the script will generate `train.meta`, `train.txt.000` (JSON format), `train.txt.001`, ..., `train.txt.129`, and `train.bin.000` (binary, converted from `train.txt.000`), `train.bin.001`, ..., `train.bin.129` in the directory `/output/path/`.
+- `label_stoi`: A label to index dict object.
+- `chunk_size`: The number of sentences in each chunk (default=10000).
 
 # Reference
 
