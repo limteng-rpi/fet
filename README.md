@@ -1,3 +1,10 @@
+# Requirment
+- Python 3.5+
+- PyTorch 1.0+
+- tqdm
+- pytorch_pretrained_bert (transformers is recommended)
+- allennlp
+
 # File Format
 We convert datasets in our experiments in two steps:
 1. We convert them to a JSON-based format as follows (each line is a sentence).
