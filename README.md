@@ -30,7 +30,10 @@ Parameters:
 
 Suppose all required files are located in `/path/to/data`, and the converted data sets are saved in `/path/to/data/buffer`, run the following command to train the model:
 ```
-python train.py --train /path/to/data/buffer/train --dev /path/to/data/buffer/dev --test /path/to/data/buffer/test --ontology /path/to/data/type.json --output /path/to/output --elmo_option /path/to/data/eng.original.5.5b.json --elmo_weight /path/to/data/eng.original.5.5b.hdf5 --batch_size 200 --max_epoch 100 --eval_step 200 --gpu
+python train.py --train /path/to/data/buffer/train --dev /path/to/data/buffer/dev 
+--test /path/to/data/buffer/test --ontology /path/to/data/type.json --output /path/to/output
+--elmo_option /path/to/data/eng.original.5.5b.json --elmo_weight /path/to/data/eng.original.5.5b.hdf5
+--batch_size 200 --max_epoch 100 --eval_step 200 --gpu
 ```
 
 # Reference
