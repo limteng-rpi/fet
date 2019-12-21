@@ -35,8 +35,10 @@ class BufferDataset(object):
                  path,
                  buffer_size=100000,
                  max_seq_len=-1,
-                 buffer=True):
+                 buffer=True,
+                 pad=C.PAD_INDEX):
         self.path = path
+        self.pad = pad
         self.data = []
         self.files = []
         self.batches = []
@@ -45,6 +47,7 @@ class BufferDataset(object):
         self.total_size = 0
         self.buffer = buffer
         self.count_total_size()
+
 
     @property
     def chunk_num(self):
@@ -203,7 +206,6 @@ class BufferDataset(object):
         batch_ctx_mask = []
         batch_gathers = []
         batch_men_ids = []
-        batch_inst_weight = []
         for inst_idx, inst in enumerate(batch):
             char_ids, labels, men_mask, ctx_mask, men_ids, anno_num, seq_len = inst
             batch_char_ids.append(char_ids + [[self.pad] * C.ELMO_MAX_CHAR_LEN
@@ -236,10 +238,8 @@ class BufferDataset(object):
             batch_gathers = torch.LongTensor(batch_gathers)
             batch_dist = torch.FloatTensor(batch_dist)
 
-        batch_inst_weight = torch.cuda.FloatTensor(batch_inst_weight) \
-            if gpu else torch.FloatTensor(batch_inst_weight)
         return (batch_char_ids, batch_labels, batch_men_mask, batch_ctx_mask,
-                batch_dist, batch_gathers, batch_men_ids, batch_inst_weight)
+                batch_dist, batch_gathers, batch_men_ids)
 
     def all_batches(self, label_size, batch_size, drop_last=False,
                     shuffle=False, gpu=True):

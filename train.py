@@ -108,7 +108,7 @@ for epoch in range(args.max_epoch):
                                      gpu=gpu)
         (
             elmos, labels, men_masks, ctx_masks, dists,
-            gathers, men_ids
+            gathers, men_ids,
         ) = batch
         loss = model.forward(elmos, labels, men_masks, ctx_masks, dists,
                              gathers, None)

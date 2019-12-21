@@ -39,11 +39,6 @@ class HFet(nn.Module):
         self.output_linear = nn.Linear(self.elmo_dim * 2, label_size, bias=False)
 
         # SVD
-        self.latent_scalar = nn.Parameter(torch.FloatTensor([.1]))
-        self.feat_to_latent = nn.Linear(self.elmo_dim * 2, self.latent_size,
-                                        bias=False)
-        self.latent_to_label = nn.Linear(self.latent_size, label_size,
-                                         bias=False)
         if svd:
             svd_mat = self.load_svd(svd)
             self.latent_size = svd_mat.size(1)
@@ -53,6 +48,11 @@ class HFet(nn.Module):
             self.latent_size = int(math.sqrt(label_size))
         else:
             self.latent_size = latent_size
+        self.latent_to_label = nn.Linear(self.latent_size, label_size,
+                                         bias=False)
+        self.latent_scalar = nn.Parameter(torch.FloatTensor([.1]))
+        self.feat_to_latent = nn.Linear(self.elmo_dim * 2, self.latent_size,
+                                        bias=False)
         # Loss function
         self.criterion = nn.MultiLabelSoftMarginLoss()
         self.mse = nn.MSELoss()
@@ -91,20 +91,11 @@ class HFet(nn.Module):
         men_attn = men_attn.softmax(1)
         men_repr = (elmo_outputs * men_attn).sum(1)
 
-        # Context representation
-        if self.flat_attn:
-            ctx_attn = self.ctx_attn_linear_c(elmo_outputs).tanh()
-            ctx_attn = self.ctx_attn_linear_o(ctx_attn)
-        else:
-            if self.dist:
-                dist = self.dist_dropout(dist)
-                ctx_attn = (self.ctx_attn_linear_c(elmo_outputs) +
-                            self.ctx_attn_linear_m(men_repr.unsqueeze(1)) +
-                            self.ctx_attn_linear_d(dist.unsqueeze(2))).tanh()
-            else:
-                ctx_attn = (self.ctx_attn_linear_c(elmo_outputs) +
-                            self.ctx_attn_linear_m(men_repr.unsqueeze(1))).tanh()
-            ctx_attn = self.ctx_attn_linear_o(ctx_attn)
+        dist = self.dist_dropout(dist)
+        ctx_attn = (self.ctx_attn_linear_c(elmo_outputs) +
+                    self.ctx_attn_linear_m(men_repr.unsqueeze(1)) +
+                    self.ctx_attn_linear_d(dist.unsqueeze(2))).tanh()
+        ctx_attn = self.ctx_attn_linear_o(ctx_attn)
 
         ctx_attn = ctx_attn + (1.0 - ctx_mask.unsqueeze(-1)) * -10000.0
         ctx_attn = ctx_attn.softmax(1)
@@ -116,10 +107,9 @@ class HFet(nn.Module):
         outputs = self.output_linear(final_repr)
 
         outputs_latent = None
-        if self.latent:
-            latent_label = self.feat_to_latent(final_repr) #.tanh()
-            outputs_latent = self.latent_to_label(latent_label)
-            outputs = outputs + self.latent_scalar * outputs_latent
+        latent_label = self.feat_to_latent(final_repr) #.tanh()
+        outputs_latent = self.latent_to_label(latent_label)
+        outputs = outputs + self.latent_scalar * outputs_latent
 
         return outputs, outputs_latent
 
