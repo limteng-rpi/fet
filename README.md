@@ -26,6 +26,19 @@ Parameters:
 - `label_stoi`: A label to index dict object.
 - `chunk_size`: The number of sentences in each chunk (default=10000).
 
+# Training
+
+Suppose all required files are located in `/path/to/data`, and the converted data sets are saved in `/path/to/data/buffer`, run the following command to train the model:
+```
+python train.py --train /path/to/data/buffer/train --dev /path/to/data/buffer/dev 
+--test /path/to/data/buffer/test --ontology /path/to/data/type.txt --output /path/to/output
+--elmo_option /path/to/data/eng.original.5.5b.json --elmo_weight /path/to/data/eng.original.5.5b.hdf5
+--batch_size 200 --max_epoch 100 --eval_step 200 --gpu
+```
+
+* `ontology` is a text file that lists all type labels (one per line).
+* Pre-trained ELMo embeddings can be downloaded from https://allennlp.org/elmo
+
 # Reference
 
 - Lin, Ying, and Heng Ji. "An Attentive Fine-Grained Entity Typing Model with Latent Type Representation." Proceedings of the 2019 Conference on Empirical Methods in Natural Language Processing and the 9th International Joint Conference on Natural Language Processing (EMNLP-IJCNLP). 2019. \[[pdf](https://www.aclweb.org/anthology/D19-1641.pdf)\]
