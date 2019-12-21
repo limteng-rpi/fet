@@ -13,18 +13,16 @@ def generate_ontology_file(input_files, output_file):
     json.dump([{'labels': list(labels)}],
               open(output_file, 'w', encoding='utf-8'))
 
+
 def load_ontology(path):
     """
     :param path:
     :return:
     """
-    ontology = json.load(open(path, 'r', encoding='utf-8'))
-    # sizes = []
     label_stoi = {}
-    for level in ontology:
-        # sizes.append(len(level['labels']))
-        for label in level['labels']:
-            label_stoi[label] = len(label_stoi)
+    with open(path, 'r', encoding='utf-8') as r:
+        for line in r:
+            label_stoi[line.strip()] = len(label_stoi)
     return label_stoi
 
 
