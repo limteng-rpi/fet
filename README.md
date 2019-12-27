@@ -7,7 +7,7 @@
 
 # File Format
 We convert datasets in our experiments in two steps:
-1. We convert them to a JSON-based format as follows (each line is a sentence).
+1. We convert them to a JSON-based format as follows (in the actual file, each line is a JSON object without linebreak and indentation).
 ```
 {
     "tokens": ["\"", "My", "direction", "to", "city", "staff", "and", "our", "experts", "is", "to", "focus", "on", "two", "goals", ":", "1", ")", "Seriously", "explore", "and", "consider", "the", "opportunity", ",", "and", "2", ")", "Ensure", "that", "taxpayers", "and", "the", "city", "of", "Seattle", "are", "protected", ",", "particularly", "in", "light", "of", "the", "public", "'s", "direction", "through", "I-91", ",", "\"", "McGinn", "said", "in", "an", "emailed", "statement", "."],
