@@ -12,6 +12,20 @@ def generate_ontology_file(input_files, output_file):
     print(labels)
     json.dump([{'labels': list(labels)}],
               open(output_file, 'w', encoding='utf-8'))
+    
+    
+def generate_ontology_file_txt(input_files, output_file):
+    labels = set()
+    for input_file in input_files:
+        with open(input_file) as r:
+            for line in r:
+                inst = json.loads(line)
+                for anno in inst['annotations']:
+                    labels.update(anno['labels'])
+    print(labels)
+    with open(output_file, 'w') as w:
+        for label in labels:
+            w.write(label + '\n')
 
 
 def load_ontology(path):
